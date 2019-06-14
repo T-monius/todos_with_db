@@ -18,15 +18,19 @@ class DatabasePersistance
     result = query(sql, id)
 
     tuple = result.first
-    { id: tuple['id'] , name: tuple['name'] , todos: [] }
+    list_id = tuple['id'].to_i
+    { id: list_id , name: tuple['name'] , todos: find_todos_for_a_list(list_id) }
   end
 
   def all_lists
     sql = "SELECT * FROM lists;"
     result = query(sql)
-    result.map do |tuple|
-      { id: tuple['id'] , name: tuple['name'] , todos: [] }
+    lists = result.map do |tuple|
+      list_id = tuple['id'].to_i
+      { id: list_id , name: tuple['name'] , todos: find_todos_for_a_list(list_id) }
     end
+    # @logger.info lists
+    lists
   end
 
   def create_new_list(list_name)
@@ -63,5 +67,22 @@ class DatabasePersistance
   def mark_all_todos_complete(list_id)
     # list = find_list(list_id)
     # list[:todos].each { |todo| todo[:completed] = true }
+  end
+
+  private
+
+  def find_todos_for_a_list(list_id)
+    sql = <<~TODOS
+            SELECT * FROM todos
+            WHERE list_id = $1;
+          TODOS
+    result = query(sql, list_id)
+    todos = result.map do |tuple|
+      { id: tuple['id'].to_i,
+        name: tuple['name'],
+        completed: tuple['completed'] == 't' }
+    end
+    # @logger.info todos
+    todos
   end
 end
