@@ -69,7 +69,7 @@ def error_for_todo(name)
 end
 
 before do
-  @storage = DatabasePersistance.new
+  @storage = DatabasePersistance.new(logger)
 end
 
 get "/" do
