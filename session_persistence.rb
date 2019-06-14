@@ -1,6 +1,6 @@
-# session_persistance.rb
+# session_persistence.rb
 
-class SessionPersistance
+class SessionPersistence
   def initialize(session)
     @session = session
     @session[:lists] ||= []

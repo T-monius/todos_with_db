@@ -1,8 +1,8 @@
-# database_persistance.rb
+# database_persistence.rb
 
 require "pg"
 
-class DatabasePersistance
+class DatabasePersistence
   def initialize(logger)
     @db = PG.connect(dbname: 'todos')
     @logger = logger
